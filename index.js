@@ -1,5 +1,6 @@
 const audioRef = document.getElementById("audio");
 const button = document.getElementById("btn");
+const jokePlaceholder = document.getElementById("joke-text");
 let joke = "";
 
 // VoiceRSS Javascript SDK
@@ -117,9 +118,11 @@ function textToSpeech(text) {
     f: "44khz_16bit_stereo",
     ssml: false,
   });
+  jokePlaceholder.textContent = text;
 }
 
 async function getJoke() {
+  button.disabled = true;
   try {
     const jokeApiUrl = "https://v2.jokeapi.dev/joke/Dark";
     let data = await (await fetch(jokeApiUrl)).json();
@@ -131,3 +134,7 @@ async function getJoke() {
 }
 
 button.addEventListener("click", getJoke);
+audioRef.addEventListener("ended", () => {
+  button.disabled = false;
+  jokePlaceholder.textContent = "";
+});
